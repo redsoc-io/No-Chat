@@ -1,0 +1,9 @@
+.conversations-section {
+  height: 100vh;
+  .conversation {
+    &:hover {
+      background: #eee;
+      cursor: pointer;
+    }
+  }
+}
