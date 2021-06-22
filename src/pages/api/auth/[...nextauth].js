@@ -32,7 +32,6 @@ export default (req, res) =>
               )}`,
               id: decryptedUser.uuid,
             };
-            console.log(user);
             return user;
           } catch (e) {
             if (dev) console.log(e);

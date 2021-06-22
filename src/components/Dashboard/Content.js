@@ -14,7 +14,7 @@ export default class content extends React.Component {
   }
   componentDidMount() {
     this.socket = io("/", {
-      query: { user: JSON.stringify(this.props.session.uuid) },
+      query: { user: this.props.session.uuid },
     });
     this.setState({ mounted: true });
   }
