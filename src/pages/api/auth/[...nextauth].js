@@ -30,7 +30,9 @@ export default (req, res) =>
               image: `https://www.gravatar.com/avatar/${md5(
                 decryptedUser.email
               )}`,
+              id: decryptedUser.uuid,
             };
+            console.log(user);
             return user;
           } catch (e) {
             if (dev) console.log(e);
@@ -41,13 +43,14 @@ export default (req, res) =>
     ],
     debug: true,
     secret: process.env.AUTH_SECRET,
-    session: {
-      jwt: {
-        maxAge: 30 * 24 * 60 * 60,
-        updateAge: 24 * 60 * 60,
+    callbacks: {
+      async session(session, token) {
+        session.uuid = token.sub;
+        return session;
       },
     },
     jwt: {
       secret: process.env.JWT_SECRET,
+      signingKey: process.env.JWT_SIGN_KEY,
     },
   });

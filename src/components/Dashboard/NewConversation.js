@@ -3,13 +3,39 @@ import React from "react";
 import { FaPlus } from "react-icons/fa";
 
 class NewConversation extends React.Component {
-  addConversation(e) {
-    e.preventDefault();
-    const conversationEmail = this.input.value;
-    this.props.addConversation({ email: conversationEmail, name: "" });
-    this.resetForm();
+  async addConversation(uuid) {
+    if (!this.checkIfConversationAlreadyPresent(uuid)) {
+      const userProfile = await this.checkIfUserExists(uuid);
+      console.log(userProfile);
+      if (userProfile.exists) {
+        this.props.addConversation({
+          uuid,
+          name: userProfile.name,
+          image: userProfile.image,
+        });
+        this.resetForm();
+      } else alert("User Doesn't Exist!");
+    }
   }
-
+  async checkIfUserExists(uuid) {
+    const response = await fetch(`/api/checkUserExists`, {
+      method: "POST",
+      body: JSON.stringify({ string: uuid }),
+    });
+    const key = await response.json();
+    return key;
+  }
+  componentDidMount() {
+    this.props.socket.on("receive-message", (message) => {
+      this.addConversation(message.from);
+    });
+  }
+  checkIfConversationAlreadyPresent(uuid) {
+    const filteredArray = this.props.conversations.filter((conv) => {
+      return conv.uuid === uuid;
+    });
+    return filteredArray.length > 0;
+  }
   resetForm() {
     this.addConversationForm.reset();
   }
@@ -18,20 +44,20 @@ class NewConversation extends React.Component {
       <div className="d-flex justify-content-center align-items-center border-bottom">
         <form
           className="row g-3 py-2 pt-4"
-          onSubmit={this.addConversation.bind(this)}
+          onSubmit={(e) => {
+            e.preventDefault();
+            this.addConversation(this.input.value);
+          }}
           ref={(addConversationForm) =>
             (this.addConversationForm = addConversationForm)
           }
           autoComplete="off"
         >
           <div className="col-auto">
-            <label htmlFor="staticEmail2" className="visually-hidden">
-              Email
-            </label>
             <input
               type="text"
               className="form-control"
-              placeholder="email@example.com"
+              placeholder="User UUID"
               ref={(input) => (this.input = input)}
             />
           </div>

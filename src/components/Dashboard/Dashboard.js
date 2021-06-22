@@ -10,7 +10,10 @@ export default class Dashboard extends React.Component {
           <title>Conversations</title>
         </Head>
         <Nav session={this.props.session} />
-        <Content conversations={this.props.conversations} />
+        <Content
+          conversations={this.props.conversations}
+          session={this.props.session}
+        />
       </>
     );
   }

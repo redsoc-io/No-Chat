@@ -15,7 +15,7 @@ export default function Auth() {
       key: content,
       redirect: false,
     });
-    setError(!signIn.ok);
+    if (!signIn.ok) setError(!signIn.ok);
   };
 
   const handleFileChosen = (file) => {

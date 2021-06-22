@@ -23,10 +23,11 @@ class Conversatons extends React.Component {
   }
   render() {
     return (
-      <div className="col-4 conversations-section border-end ">
+      <div className="col-lg-4 col-md-12 conversations-section border-end ">
         <NewConversation
           conversations={this.state.conversations}
           addConversation={this.addConversation.bind(this)}
+          socket={this.props.socket}
         />
         {this.state.conversations.length === 0 && (
           <div className="text-center py-3">
@@ -45,13 +46,21 @@ class Conversatons extends React.Component {
             {this.state.conversations
               .filter((val) => {
                 return (
-                  val.email.includes(this.state.searchQuery) ||
+                  val.uuid.includes(this.state.searchQuery) ||
                   val.name.includes(this.state.searchQuery)
                 );
               })
               .map((conv) => {
                 return (
-                  <Conversation details={conv} key={JSON.stringify(conv)} />
+                  <div
+                    className="text-start px-3 conversation"
+                    onClick={() => {
+                      this.props.setActiveConversation(conv);
+                    }}
+                    key={JSON.stringify(conv)}
+                  >
+                    <Conversation details={conv} />
+                  </div>
                 );
               })}
           </>

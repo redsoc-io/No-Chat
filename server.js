@@ -21,8 +21,18 @@ app.prepare().then(() => {
 
   const io = require("socket.io")(no_chat, { cors: { origin: "*" } });
 
-  io.on("connection", (socket) => {
-    console.log(socket.id);
+  io.on("connect", (socket) => {
+    var userUID = JSON.parse(socket.handshake.query.user);
+    socket.join(userUID);
+
+    socket.on("send-message", ({ recipients, message }) => {
+      recipients.forEach((recipient) => {
+        console.log(recipient);
+        socket.broadcast
+          .to(recipient)
+          .emit("receive-message", { message, from: userUID });
+      });
+    });
   });
 
   const port = process.env.PORT || 3000;

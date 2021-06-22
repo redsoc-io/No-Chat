@@ -1,7 +1,23 @@
 import React from "react";
 import { signOut } from "next-auth/client";
+import { FaCopy, FaExternalLinkAlt, FaSignOutAlt } from "react-icons/fa";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 export default class Nav extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { copied: false };
+  }
+  componentDidMount() {
+    console.log(this.props.session);
+  }
+  copied() {
+    this.setState({ copied: true }, () => {
+      setTimeout(() => {
+        this.setState({ copied: false });
+      }, 1000);
+    });
+  }
   render() {
     return (
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -22,7 +38,7 @@ export default class Nav extends React.Component {
             </div>
           </div>
           <div className="col-6">
-            <form className="d-flex justify-content-end align-items-center">
+            <div className="d-flex justify-content-end align-items-center">
               <div className="btn-group nav-prof-options">
                 <button
                   className="btn btn-secondary btn-lg dropdown-toggle prof-top"
@@ -42,6 +58,31 @@ export default class Nav extends React.Component {
                 </button>
                 <ul className="dropdown-menu">
                   <li>
+                    <a
+                      className="btn btn-primary w-100"
+                      href="https://www.gravatar.com/"
+                      target="_blank"
+                    >
+                      <FaExternalLinkAlt /> Change Avatar
+                    </a>
+                  </li>
+                  <li>
+                    <CopyToClipboard
+                      text={this.props.session.uuid}
+                      onCopy={(e) => {
+                        this.copied();
+                      }}
+                    >
+                      <button
+                        className={`btn ${
+                          this.state.copied ? "btn-success" : "btn-secondary"
+                        } w-100`}
+                      >
+                        <FaCopy /> Copy UserID
+                      </button>
+                    </CopyToClipboard>
+                  </li>
+                  <li>
                     <button
                       className="btn btn-danger w-100"
                       onClick={(e) => {
@@ -49,12 +90,12 @@ export default class Nav extends React.Component {
                         signOut({ redirect: false, callbackUrl: "/" });
                       }}
                     >
-                      Logout
+                      <FaSignOutAlt /> Logout
                     </button>
                   </li>
                 </ul>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </nav>
