@@ -44,7 +44,7 @@ export default class Signup extends React.Component {
     return (
       <header className="container-fluid h-100 bg-dark header-holder">
         <div className="row h-100">
-          <div className="col-6 d-flex justify-content-start align-items-center py-4">
+          <div className="col-lg-6 col-xs-12 col-md-12 d-flex justify-content-start align-items-center py-4">
             <div className="container p-5 flex-column d-flex justify-content-start align-items-start">
               <img src="/logo.png" alt="..." height="200" width="200" />
               <h1 className="text-light py-3">Signup</h1>
@@ -54,7 +54,7 @@ export default class Signup extends React.Component {
               </p>
             </div>
           </div>
-          <div className="col-6 d-flex justify-content-center align-items-center">
+          <div className="col-lg-6 col-xs-12 col-md-12 d-flex justify-content-center align-items-center">
             <div className="container d-flex justify-content-center align-items-center w-100 h-100vh">
               <div className="d-flex justify-content-center flex-column align-items-start w-100  h-100 p-3">
                 <form
