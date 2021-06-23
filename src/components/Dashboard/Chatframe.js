@@ -62,26 +62,15 @@ export default class Chatframe extends React.Component {
                   </div>
                 </div>
               </div>
-              <div className="bg-light w-100 p-3 h-100">
-                <div className="messages container">
+              <div className="bg-light w-100 p-3 h-100 messages-holder">
+                <div className="messages container h-100">
                   {this.state.messages.map(({ from, message }) => {
                     return (
-                      <div className="row">
-                        <div className="col-6">
-                          {from === this.props.conversation.uuid && (
-                            <div className="text-start bg-primary text-white rounded-pill d-block p-3">
-                              {message}
-                            </div>
-                          )}
-                        </div>
-                        <div className="col-6">
-                          {from === this.props.currentUserUid && (
-                            <div className="text-end bg-primary text-white rounded-pill d-block p-3">
-                              {message}
-                            </div>
-                          )}
-                        </div>
-                      </div>
+                      <Message
+                        from={from}
+                        message={message}
+                        currentUserUid={this.props.currentUserUid}
+                      />
                     );
                   })}
                 </div>
@@ -118,6 +107,36 @@ export default class Chatframe extends React.Component {
                   </div>
                 </form>
               </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+}
+
+class Message extends React.Component {
+  componentDidMount() {
+    this.scrollIntoView();
+  }
+  scrollIntoView() {
+    this.msg.scrollIntoView({ behavior: "smooth" });
+  }
+  render() {
+    const props = this.props;
+    return (
+      <div className="row" ref={(elem) => (this.msg = elem)}>
+        <div className="col-6">
+          {this.props.from !== this.props.currentUserUid && (
+            <div className="text-start bg-primary text-white rounded-pill d-block p-3">
+              {this.props.message}
+            </div>
+          )}
+        </div>
+        <div className="col-6">
+          {this.props.from === this.props.currentUserUid && (
+            <div className="text-end bg-primary text-white rounded-pill d-block p-3">
+              {this.props.message}
             </div>
           )}
         </div>
