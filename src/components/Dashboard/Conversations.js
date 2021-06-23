@@ -36,9 +36,9 @@ class Conversatons extends React.Component {
         )}
         {this.state.conversations.length > 0 && (
           <>
-            <div className="border-bottom">
+            <div className="p-3 border-bottom bg-light">
               <input
-                className="form-control rounded-0 border-0 outline-none"
+                className="form-control rounded-pill outline-none"
                 placeholder="Search Conversations by Name or Email"
                 onChange={this.searchQueryChanged.bind(this)}
               />

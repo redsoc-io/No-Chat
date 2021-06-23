@@ -1,7 +1,11 @@
 import React from "react";
 import { signOut } from "next-auth/client";
-import { FaCopy, FaExternalLinkAlt, FaSignOutAlt } from "react-icons/fa";
-import { CopyToClipboard } from "react-copy-to-clipboard";
+import {
+  FaCopy,
+  FaDownload,
+  FaExternalLinkAlt,
+  FaSignOutAlt,
+} from "react-icons/fa";
 
 export default class Nav extends React.Component {
   constructor(props) {
@@ -11,12 +15,20 @@ export default class Nav extends React.Component {
   componentDidMount() {
     console.log(this.props.session);
   }
-  copied() {
-    this.setState({ copied: true }, () => {
-      setTimeout(() => {
-        this.setState({ copied: false });
-      }, 1000);
-    });
+  download(filename, text) {
+    var element = document.createElement("a");
+    element.setAttribute(
+      "href",
+      "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+    );
+    element.setAttribute("download", filename);
+
+    element.style.display = "none";
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
   }
   render() {
     return (
@@ -67,20 +79,17 @@ export default class Nav extends React.Component {
                     </a>
                   </li>
                   <li>
-                    <CopyToClipboard
-                      text={this.props.session.uuid}
-                      onCopy={(e) => {
-                        this.copied();
+                    <button
+                      className={`btn btn-info w-100`}
+                      onClick={() => {
+                        this.download(
+                          `${this.props.session.user.name.trim()}-no-chat.ncc`.toLowerCase(),
+                          this.props.session.uuid
+                        );
                       }}
                     >
-                      <button
-                        className={`btn ${
-                          this.state.copied ? "btn-success" : "btn-secondary"
-                        } w-100`}
-                      >
-                        <FaCopy /> Copy UserID
-                      </button>
-                    </CopyToClipboard>
+                      <FaDownload /> Contact Card
+                    </button>
                   </li>
                   <li>
                     <button

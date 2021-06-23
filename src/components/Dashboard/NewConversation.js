@@ -1,6 +1,7 @@
 import { withCookie } from "next-cookie";
 import React from "react";
 import { FaPlus } from "react-icons/fa";
+import Dropzone from "react-dropzone";
 
 class NewConversation extends React.Component {
   async addConversation(uuid) {
@@ -13,7 +14,6 @@ class NewConversation extends React.Component {
           name: userProfile.name,
           image: userProfile.image,
         });
-        this.resetForm();
       } else alert("User Doesn't Exist!");
     }
   }
@@ -36,38 +36,49 @@ class NewConversation extends React.Component {
     });
     return filteredArray.length > 0;
   }
-  resetForm() {
-    this.addConversationForm.reset();
+  handleFileChosen(file) {
+    let fileReader;
+
+    const handleFileRead = async (e) => {
+      const content = fileReader.result;
+      this.addConversation(content);
+    };
+
+    fileReader = new FileReader();
+    fileReader.onloadend = handleFileRead;
+    fileReader.readAsText(file);
   }
   render() {
     return (
-      <div className="d-flex justify-content-center align-items-center border-bottom">
-        <form
-          className="row g-3 py-2 pt-4"
-          onSubmit={(e) => {
-            e.preventDefault();
-            this.addConversation(this.input.value);
-          }}
-          ref={(addConversationForm) =>
-            (this.addConversationForm = addConversationForm)
-          }
-          autoComplete="off"
-        >
-          <div className="col-auto">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="User UUID"
-              ref={(input) => (this.input = input)}
-            />
+      <Dropzone
+        onDrop={(acceptedFiles) => {
+          this.handleFileChosen(acceptedFiles[0]);
+        }}
+      >
+        {({ getRootProps, getInputProps, isDragActive }) => (
+          <div
+            {...getRootProps()}
+            className={`btn-group-vertical border-1 w-100 cursor-pointer bg-white p-3 d-flex justify-content-center align-items-center ${
+              isDragActive
+                ? " border border-primary"
+                : "border-bottom border-top"
+            }`}
+          >
+            <section className="d-flex justify-content-center align-items-center">
+              <div className="text-center">
+                <input {...getInputProps()} />
+                <p
+                  className={`${
+                    isDragActive ? "text-primary" : "text-muted"
+                  } m-0`}
+                >
+                  Drop contact card here to add a conversation
+                </p>
+              </div>
+            </section>
           </div>
-          <div className="col-auto">
-            <button type="submit" className="btn btn-primary mb-3">
-              <FaPlus /> Conversation
-            </button>
-          </div>
-        </form>
-      </div>
+        )}
+      </Dropzone>
     );
   }
 }
