@@ -9,24 +9,36 @@ export default class Chatframe extends React.Component {
   sendMessage() {
     const recipients = [this.props.conversation.uuid];
     const message = this.state.message;
-    this.setState(
-      {
-        messages: [
-          ...this.state.messages,
-          { from: this.props.currentUserUid, message: message },
-        ],
-      },
-      () => {
-        this.props.socket.emit("send-message", { recipients, message });
-      }
-    );
+    if (message)
+      this.setState(
+        {
+          messages: [
+            ...this.state.messages,
+            { from: this.props.currentUserUid, message: message },
+          ],
+          message: "",
+        },
+        () => {
+          this.props.socket.emit("send-message", { recipients, message });
+        }
+      );
   }
 
   componentDidMount() {
     this.props.socket.on("receive-message", (message) => {
       this.setState({ messages: [...this.state.messages, message] });
     });
+    document.addEventListener("keyup", this._handleKeyUp);
   }
+  _handleKeyUp = (event) => {
+    switch (event.keyCode) {
+      case 13:
+        this.sendMessage();
+        break;
+      default:
+        break;
+    }
+  };
   render() {
     return (
       <div className="col-md-12 col-lg-8">
@@ -91,6 +103,7 @@ export default class Chatframe extends React.Component {
                         onChange={({ target }) => {
                           this.setState({ message: target.value });
                         }}
+                        value={this.state.message}
                       ></textarea>
                     </div>
                     <div className="col-1">
@@ -126,14 +139,14 @@ class Message extends React.Component {
     const props = this.props;
     return (
       <div className="row" ref={(elem) => (this.msg = elem)}>
-        <div className="col-6">
+        <div className="col-6 left">
           {this.props.from !== this.props.currentUserUid && (
             <div className="text-start bg-primary text-white rounded-pill d-block p-3">
               {this.props.message}
             </div>
           )}
         </div>
-        <div className="col-6">
+        <div className="col-6 right">
           {this.props.from === this.props.currentUserUid && (
             <div className="text-end bg-primary text-white rounded-pill d-block p-3">
               {this.props.message}
