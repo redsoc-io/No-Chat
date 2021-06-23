@@ -1,4 +1,5 @@
 import md5 from "md5";
+const dev = process.env.NODE_ENV !== "production";
 
 var aes256 = require("aes256");
 
@@ -20,10 +21,9 @@ export default function (req, res) {
         process.env.ENCRYPT_SECRET,
         JSON.stringify(userData)
       );
-      console.log(userData);
       res.send(encryptedPlainText);
     } catch (e) {
-      console.log(e);
+      if (dev) console.log(e);
       res.send("Unable to process your request");
     }
   } else {

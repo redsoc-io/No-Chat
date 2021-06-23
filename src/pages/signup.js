@@ -1,12 +1,13 @@
 import React from "react";
 import Link from "next/link";
+import Head from "next/head";
+import { withRouter } from "next/router";
 
-export default class Signup extends React.Component {
+class Signup extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       name: "",
-      nname: "",
       email: "",
     };
   }
@@ -34,15 +35,16 @@ export default class Signup extends React.Component {
     });
     const key = await response.text();
     this.download("no-chat_key.key", key);
+    this.setState({ name: "", email: "" });
+    this.props.router.push("/");
   }
   render() {
-    const disabledPost = !(
-      this.state.name &&
-      this.state.nname &&
-      this.state.email
-    );
+    const disabledPost = !(this.state.name && this.state.email);
     return (
       <header className="container-fluid h-100 bg-dark header-holder">
+        <Head>
+          <title>No-chat: Signup</title>
+        </Head>
         <div className="row h-100">
           <div className="col-lg-6 col-xs-12 col-md-12 d-flex justify-content-start align-items-center py-4">
             <div className="container p-5 flex-column d-flex justify-content-start align-items-start">
@@ -72,26 +74,18 @@ export default class Signup extends React.Component {
                       onChange={({ target }) => {
                         this.setState({ name: target.value });
                       }}
-                    />
-                  </div>
-                  <div className="form-group py-3">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Enter your Nickname"
-                      onChange={({ target }) => {
-                        this.setState({ nname: target.value });
-                      }}
+                      value={this.state.name}
                     />
                   </div>
                   <div className="form-group py-3">
                     <input
                       type="email"
                       className="form-control"
-                      placeholder="Enter Email"
+                      placeholder="Enter your Email"
                       onChange={({ target }) => {
                         this.setState({ email: target.value });
                       }}
+                      value={this.state.email}
                     />
                   </div>
                   <div className="form-group py-3">
@@ -117,3 +111,5 @@ export default class Signup extends React.Component {
     );
   }
 }
+
+export default withRouter(Signup);

@@ -7,7 +7,6 @@ class NewConversation extends React.Component {
   async addConversation(uuid) {
     if (!this.checkIfConversationAlreadyPresent(uuid)) {
       const userProfile = await this.checkIfUserExists(uuid);
-      console.log(userProfile);
       if (userProfile.exists) {
         this.props.addConversation({
           uuid,

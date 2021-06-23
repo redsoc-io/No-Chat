@@ -12,9 +12,7 @@ export default class Nav extends React.Component {
     super(props);
     this.state = { copied: false };
   }
-  componentDidMount() {
-    console.log(this.props.session);
-  }
+  componentDidMount() {}
   download(filename, text) {
     var element = document.createElement("a");
     element.setAttribute(

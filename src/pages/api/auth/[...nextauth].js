@@ -25,7 +25,6 @@ export default (req, res) =>
             var decryptedUser = JSON.parse(cipher.decrypt(key));
             const user = {
               name: decryptedUser.name,
-              nickname: decryptedUser.nname,
               email: decryptedUser.email,
               image: `https://www.gravatar.com/avatar/${md5(
                 decryptedUser.email

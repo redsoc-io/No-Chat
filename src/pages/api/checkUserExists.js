@@ -1,6 +1,7 @@
 import md5 from "md5";
 
 var aes256 = require("aes256");
+const dev = process.env.NODE_ENV !== "production";
 
 export default function (req, res) {
   res.setHeader("Content-Type", "text/plain");
@@ -9,7 +10,6 @@ export default function (req, res) {
       const string = JSON.parse(req.body).string || "--";
       const uuid_cyper = aes256.createCipher(process.env.UUID_SECRET);
       const dec = uuid_cyper.decrypt(string);
-      console.log(dec);
       const user = JSON.parse(dec);
       const userProfile = {
         exists: true,
@@ -18,7 +18,7 @@ export default function (req, res) {
       };
       res.status(200).json(userProfile);
     } catch (e) {
-      console.log(e);
+      if (dev) console.log(e);
       res.status(200).json({ exists: false });
     }
   } else {
