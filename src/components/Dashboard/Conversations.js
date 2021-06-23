@@ -1,40 +1,29 @@
 import React from "react";
 import NewConversation from "./NewConversation";
-import { useCookie, withCookie } from "next-cookie";
 import Conversation from "./Conversation";
 
 class Conversatons extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { searchQuery: "", conversations: this.props.conversations };
-    this.cookie = useCookie(this.props.cookie);
+    this.state = { searchQuery: "" };
   }
   searchQueryChanged({ target }) {
     this.setState({ searchQuery: target.value });
-  }
-  addConversation(details) {
-    if (details)
-      this.setState({ conversations: [...this.state.conversations, details] });
-  }
-  componentDidUpdate(prevS) {
-    if (prevS.conversations !== this.state.conversations) {
-      this.cookie.set("conversations", [...this.state.conversations]);
-    }
   }
   render() {
     return (
       <div className="col-lg-4 col-md-12 conversations-section border-end ">
         <NewConversation
-          conversations={this.state.conversations}
-          addConversation={this.addConversation.bind(this)}
+          conversations={this.props.conversations}
+          addConversation={this.props.addConversation.bind(this)}
           socket={this.props.socket}
         />
-        {this.state.conversations.length === 0 && (
+        {this.props.conversations.length === 0 && (
           <div className="text-center py-3">
             <p className="text-muted">No Conversations</p>
           </div>
         )}
-        {this.state.conversations.length > 0 && (
+        {this.props.conversations.length > 0 && (
           <>
             <div className="p-3 border-bottom bg-light">
               <input
@@ -43,24 +32,23 @@ class Conversatons extends React.Component {
                 onChange={this.searchQueryChanged.bind(this)}
               />
             </div>
-            {this.state.conversations
+            {this.props.conversations
               .filter((val) => {
                 return (
                   val.uuid.includes(this.state.searchQuery) ||
                   val.name.includes(this.state.searchQuery)
                 );
               })
-              .map((conv) => {
+              .map((conv, i) => {
                 return (
-                  <div
-                    className="text-start px-3 conversation"
-                    onClick={() => {
-                      this.props.setActiveConversation(conv);
-                    }}
+                  <Conversation
+                    details={conv}
                     key={JSON.stringify(conv)}
-                  >
-                    <Conversation details={conv} />
-                  </div>
+                    setActiveConversation={this.props.setActiveConversation.bind(
+                      this
+                    )}
+                    i={i}
+                  />
                 );
               })}
           </>
@@ -70,4 +58,4 @@ class Conversatons extends React.Component {
   }
 }
 
-export default withCookie(Conversatons);
+export default Conversatons;

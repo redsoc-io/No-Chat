@@ -4,43 +4,12 @@ import { FaPlus } from "react-icons/fa";
 import Dropzone from "react-dropzone";
 
 class NewConversation extends React.Component {
-  async addConversation(uuid) {
-    if (!this.checkIfConversationAlreadyPresent(uuid)) {
-      const userProfile = await this.checkIfUserExists(uuid);
-      if (userProfile.exists) {
-        this.props.addConversation({
-          uuid,
-          name: userProfile.name,
-          image: userProfile.image,
-        });
-      } else alert("User Doesn't Exist!");
-    }
-  }
-  async checkIfUserExists(uuid) {
-    const response = await fetch(`/api/checkUserExists`, {
-      method: "POST",
-      body: JSON.stringify({ string: uuid }),
-    });
-    const key = await response.json();
-    return key;
-  }
-  componentDidMount() {
-    this.props.socket.on("receive-message", (message) => {
-      this.addConversation(message.from);
-    });
-  }
-  checkIfConversationAlreadyPresent(uuid) {
-    const filteredArray = this.props.conversations.filter((conv) => {
-      return conv.uuid === uuid;
-    });
-    return filteredArray.length > 0;
-  }
   handleFileChosen(file) {
     let fileReader;
 
     const handleFileRead = async (e) => {
       const content = fileReader.result;
-      this.addConversation(content);
+      this.props.addConversation(content);
     };
 
     fileReader = new FileReader();

@@ -1,5 +1,5 @@
 import React from "react";
-import { FaPaperPlane } from "react-icons/fa";
+import { FaPaperPlane, FaTrash } from "react-icons/fa";
 
 export default class Chatframe extends React.Component {
   constructor(props) {
@@ -7,28 +7,19 @@ export default class Chatframe extends React.Component {
     this.state = { message: "", messages: [] };
   }
   sendMessage() {
+    console.log(this.props);
     const recipients = [this.props.conversation.uuid];
     const message = this.state.message;
-    if (message)
-      this.setState(
-        {
-          messages: [
-            ...this.state.messages,
-            { from: this.props.currentUserUid, message: message },
-          ],
-          message: "",
-        },
-        () => {
-          this.props.socket.emit("send-message", { recipients, message });
-        }
+    if (message && message !== "\n") {
+      console.log(message);
+      this.props.addMessageToConversation(
+        message,
+        this.props.currentUserUid,
+        this.props.currentIndex
       );
-  }
-
-  componentDidMount() {
-    this.props.socket.on("receive-message", (message) => {
-      this.setState({ messages: [...this.state.messages, message] });
-    });
-    document.addEventListener("keyup", this._handleKeyUp);
+      this.props.socket.emit("send-message", { recipients, message });
+    }
+    this.setState({ message: "" });
   }
   _handleKeyUp = (event) => {
     switch (event.keyCode) {
@@ -39,6 +30,9 @@ export default class Chatframe extends React.Component {
         break;
     }
   };
+  componentDidMount() {
+    document.addEventListener("keydown", this._handleKeyUp);
+  }
   render() {
     return (
       <div className="col-md-12 col-lg-8">
@@ -54,7 +48,7 @@ export default class Chatframe extends React.Component {
             </div>
           )}
           {this.props.conversation && (
-            <div className="bg-white h-100 d-flex justify-content-stretch align-items-stretch flex-column">
+            <div className="bg-white h-100 d-flex justify-content-stretch align-items-stretch flex-column chat-frame-holder">
               <div className="bg-info w-100 p-3">
                 <div className="row">
                   <div className="col-6">
@@ -72,19 +66,36 @@ export default class Chatframe extends React.Component {
                         this.props.conversation.uuid}
                     </span>
                   </div>
+                  <div className="col-6">
+                    <div className="container d-flex justify-content-end align-items-center h-100 w-100">
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => {
+                          this.props.deleteConversation(
+                            this.props.conversation.uuid
+                          );
+                        }}
+                      >
+                        <FaTrash /> Delete
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="bg-light w-100 p-3 h-100 messages-holder">
-                <div className="messages container h-100">
-                  {this.state.messages.map(({ from, message }) => {
-                    return (
-                      <Message
-                        from={from}
-                        message={message}
-                        currentUserUid={this.props.currentUserUid}
-                      />
-                    );
-                  })}
+              <div className="bg-light w-100 messages-holder p-2">
+                <div className="messages container">
+                  {(this.props.conversation.messages || []).map(
+                    ({ from, message }, i) => {
+                      return (
+                        <Message
+                          from={from}
+                          message={message}
+                          currentUserUid={this.props.currentUserUid}
+                          key={this.props.currentUserUid + from + i}
+                        />
+                      );
+                    }
+                  )}
                 </div>
               </div>
               <div className="bg-info w-100 p-3">
@@ -96,20 +107,20 @@ export default class Chatframe extends React.Component {
                   }}
                 >
                   <div className="row g-1">
-                    <div className="col-11">
-                      <textarea
+                    <div className="col-10">
+                      <input
                         className="form-control"
                         placeholder="Message"
                         onChange={({ target }) => {
                           this.setState({ message: target.value });
                         }}
                         value={this.state.message}
-                      ></textarea>
+                      />
                     </div>
-                    <div className="col-1">
+                    <div className="col-2">
                       <div className="container">
                         <button
-                          className="send btn btn-primary"
+                          className="send btn btn-primary w-100"
                           disabled={!this.state.message}
                           type="submit"
                         >

@@ -78,7 +78,7 @@ export default class Nav extends React.Component {
                   </li>
                   <li>
                     <button
-                      className={`btn btn-info w-100`}
+                      className={`btn btn-primary w-100`}
                       onClick={() => {
                         this.download(
                           `${this.props.session.user.name.trim()}-no-chat.ncc`.toLowerCase(),

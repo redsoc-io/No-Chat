@@ -1,34 +1,46 @@
-.messages-holder {
-  .messages {
-    &.container {
-      height: fit-content;
-      max-height: 68vh;
-      overflow-y: scroll;
-      overflow-x: hidden;
-      .row {
-        padding: 0 2em;
-        .left {
-          & > div {
-            border-top-left-radius: 0 !important;
+.chat-frame-holder {
+  max-height: 100vh !important;
+  .messages-holder {
+    height: calc(100% - 80px - 70px);
+    .messages {
+      &.container {
+        height: fit-content;
+        max-height: 100%;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        .row {
+          padding: 0 2em;
+          .left {
+            & > div {
+              border-top-left-radius: 0 !important;
+            }
           }
-        }
-        .right {
-          display: flex;
-          justify-content: flex-end;
-          align-items: flex-end;
-          & > div {
-            border-top-right-radius: 0 !important;
-            width: 100%;
+          .right {
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+            & > div {
+              border-top-right-radius: 0 !important;
+              width: 100%;
+            }
           }
-        }
-        .left,
-        .right {
-          & > div {
-            margin: 0.1em 0;
-            padding: 6em 0em;
+          .left,
+          .right {
+            & > div {
+              margin: 0.1em 0;
+              padding: 6em 0em;
+            }
           }
         }
       }
     }
+  }
+}
+
+.conversation-list-item {
+  cursor: pointer;
+  &:hover,
+  &.active {
+    background-color: #eee;
   }
 }
