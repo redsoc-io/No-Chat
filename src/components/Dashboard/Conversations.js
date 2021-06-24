@@ -47,6 +47,7 @@ class Conversatons extends React.Component {
                     setActiveConversation={this.props.setActiveConversation.bind(
                       this
                     )}
+                    currentIndex={this.props.currentIndex}
                     i={i}
                   />
                 );

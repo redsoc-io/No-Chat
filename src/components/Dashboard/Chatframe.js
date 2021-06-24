@@ -7,31 +7,12 @@ export default class Chatframe extends React.Component {
     this.state = { message: "", messages: [] };
   }
   sendMessage() {
-    console.log(this.props);
-    const recipients = [this.props.conversation.uuid];
+    const recipient = this.props.conversation.uuid;
     const message = this.state.message;
     if (message && message !== "\n") {
-      console.log(message);
-      this.props.addMessageToConversation(
-        message,
-        this.props.currentUserUid,
-        this.props.currentIndex
-      );
-      this.props.socket.emit("send-message", { recipients, message });
+      this.props.socket.emit("send-message", { recipient, message });
     }
     this.setState({ message: "" });
-  }
-  _handleKeyUp = (event) => {
-    switch (event.keyCode) {
-      case 13:
-        this.sendMessage();
-        break;
-      default:
-        break;
-    }
-  };
-  componentDidMount() {
-    document.addEventListener("keydown", this._handleKeyUp);
   }
   render() {
     return (
@@ -84,8 +65,14 @@ export default class Chatframe extends React.Component {
               </div>
               <div className="bg-light w-100 messages-holder p-2">
                 <div className="messages container">
-                  {(this.props.conversation.messages || []).map(
-                    ({ from, message }, i) => {
+                  {(this.props.conversation.messages || [])
+                    .sort((a, b) => {
+                      if (b.receiveTimeVal > a.receiveTimeVal) {
+                        return -1;
+                      }
+                      return 1;
+                    })
+                    .map(({ from, message }, i) => {
                       return (
                         <Message
                           from={from}
@@ -94,8 +81,7 @@ export default class Chatframe extends React.Component {
                           key={this.props.currentUserUid + from + i}
                         />
                       );
-                    }
-                  )}
+                    })}
                 </div>
               </div>
               <div className="bg-info w-100 p-3">
@@ -139,6 +125,7 @@ export default class Chatframe extends React.Component {
   }
 }
 
+import { motion, AnimatePresence } from "framer-motion";
 class Message extends React.Component {
   componentDidMount() {
     this.scrollIntoView();
@@ -149,22 +136,39 @@ class Message extends React.Component {
   render() {
     const props = this.props;
     return (
-      <div className="row" ref={(elem) => (this.msg = elem)}>
-        <div className="col-6 left">
-          {this.props.from !== this.props.currentUserUid && (
-            <div className="text-start bg-primary text-white rounded-pill d-block p-3">
-              {this.props.message}
-            </div>
-          )}
+      <AnimatePresence>
+        <div className="row" ref={(elem) => (this.msg = elem)}>
+          <div className="col-6 left">
+            {this.props.from !== this.props.currentUserUid && (
+              <motion.div
+                className="text-start bg-primary text-white rounded-10 d-block py-2 px-3"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{}}
+              >
+                {this.props.message}
+              </motion.div>
+            )}
+          </div>
+          <div className="col-6 right">
+            {this.props.from === this.props.currentUserUid && (
+              <motion.div
+                className="text-end bg-primary text-white rounded-10 d-block py-2 px-3"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                  transition: {
+                    staggerChildren: 0.0,
+                  },
+                }}
+              >
+                {this.props.message}
+              </motion.div>
+            )}
+          </div>
         </div>
-        <div className="col-6 right">
-          {this.props.from === this.props.currentUserUid && (
-            <div className="text-end bg-primary text-white rounded-pill d-block p-3">
-              {this.props.message}
-            </div>
-          )}
-        </div>
-      </div>
+      </AnimatePresence>
     );
   }
 }

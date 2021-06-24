@@ -23,15 +23,18 @@ app.prepare().then(() => {
 
   io.on("connect", (socket) => {
     var userUID = socket.handshake.query.user;
-    console.log(userUID);
     socket.join(userUID);
+    socket.on("send-message", ({ recipient, message }) => {
+      const currentDateValue = new Date().valueOf();
+      const messagetoSend = {
+        message,
+        from: userUID,
+        to: recipient,
+        receiveTimeVal: currentDateValue,
+      };
 
-    socket.on("send-message", ({ recipients, message }) => {
-      recipients.forEach((recipient) => {
-        socket.broadcast
-          .to(recipient)
-          .emit("receive-message", { message, from: userUID });
-      });
+      socket.broadcast.to(recipient).emit("receive-message", messagetoSend);
+      socket.emit("receive-message", messagetoSend);
     });
   });
 

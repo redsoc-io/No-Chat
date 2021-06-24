@@ -20,7 +20,11 @@ class NewConversation extends React.Component {
     return (
       <Dropzone
         onDrop={(acceptedFiles) => {
-          this.handleFileChosen(acceptedFiles[0]);
+          var name = acceptedFiles[0].name;
+          const extension = name.substr(name.length - 3);
+          if (extension === "ncc") {
+            this.handleFileChosen(acceptedFiles[0]);
+          }
         }}
       >
         {({ getRootProps, getInputProps, isDragActive }) => (

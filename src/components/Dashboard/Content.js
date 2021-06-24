@@ -15,7 +15,10 @@ class Content extends React.Component {
     this.cookie = useCookie(this.props.cookie);
   }
   componentDidUpdate() {
-    this.cookie.set("conversations", [...this.state.conversations]);
+    this.cookie.set(
+      "conversations",
+      JSON.stringify([...this.state.conversations])
+    );
   }
   componentDidMount() {
     this.socket = io("/", {
@@ -30,7 +33,7 @@ class Content extends React.Component {
     this.setState({ activeIndex: index });
     localStorage.setItem("activeConversationIndex", index);
   }
-  async addConversation(uuid, message) {
+  async addConversation(uuid, receiveTimeVal, message) {
     const checkIfUserExists = async (uuid) => {
       const response = await fetch(`/api/checkUserExists`, {
         method: "POST",
@@ -56,14 +59,16 @@ class Content extends React.Component {
               uuid,
               name: userProfile.name,
               image: userProfile.image,
-              messages: message ? [{ from: uuid, message }] : [],
+              messages: message
+                ? [{ from: uuid, message, receiveTimeVal }]
+                : [],
             },
           ],
         });
       } else alert("User Doesn't Exist!");
     }
   }
-  handleIncomingMessage({ message, from }) {
+  handleIncomingMessage({ message, from, to, receiveTimeVal }) {
     const getIndexOfConversation = (uuid) => {
       for (var i = 0; i < this.state.conversations.length; i++) {
         const convId = this.state.conversations[i].uuid;
@@ -71,23 +76,24 @@ class Content extends React.Component {
       }
       return null;
     };
-    const index = getIndexOfConversation(from);
+    const fromMyself = from === this.props.session.uuid;
+    const index = getIndexOfConversation(fromMyself ? to : from);
     if (index != null) {
       /* Conversation Already Present */
-      this.addMessageToConversation(message, from, index);
+      this.addMessageToConversation(message, from, receiveTimeVal, index);
     } else {
       /* Add Conversation then add Message */
-      this.addConversation(from, message);
+      this.addConversation(from, receiveTimeVal, message);
     }
   }
-  addMessageToConversation(message, from, index) {
+  addMessageToConversation(message, from, receiveTimeVal, index) {
     const newConversations = [...this.state.conversations];
     newConversations[index].messages = newConversations[index].messages
       ? newConversations[index].messages
       : [];
     newConversations[index].messages = [
       ...newConversations[index].messages,
-      { from, message },
+      { from, message, receiveTimeVal },
     ];
     this.setState({ conversations: newConversations });
   }
@@ -107,6 +113,7 @@ class Content extends React.Component {
               conversations={this.state.conversations}
               setActiveConversation={this.setActiveConversation.bind(this)}
               addConversation={this.addConversation.bind(this)}
+              currentIndex={this.state.activeIndex}
             />
             <Chatframe
               conversation={this.state.conversations[this.state.activeIndex]}
