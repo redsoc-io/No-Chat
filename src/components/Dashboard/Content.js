@@ -1,26 +1,41 @@
 import React from "react";
 import Chatframe from "./Chatframe";
 import Conversatons from "./Conversations";
-import { useCookie, withCookie } from "next-cookie";
 const io = require("socket.io-client");
+const localforage = require("localforage");
 
-class Content extends React.Component {
+export default class Content extends React.Component {
   constructor(props) {
     super(props);
+    this.localforage = localforage;
     this.state = {
       activeIndex: parseInt(localStorage.getItem("activeConversationIndex")),
       mounted: false,
-      conversations: [...this.props.conversations],
+      conversations: [],
     };
-    this.cookie = useCookie(this.props.cookie);
   }
-  componentDidUpdate() {
-    this.cookie.set(
-      "conversations",
-      JSON.stringify([...this.state.conversations])
-    );
+  async initConversationsDatabase() {
+    this.localforage.config({
+      driver: localforage.WEBSQL,
+      name: "no-chat",
+      version: 1.0,
+      size: 104857600,
+      storeName: "nc-27",
+      description: "Client side database to store no-chat info",
+    });
+    try {
+      const value = await this.localforage.getItem("conversations");
+      this.setState({ conversations: typeof value === "object" ? value : [] });
+    } catch (err) {
+      console.log(err); // It's fine :)
+    }
+  }
+  updateDatabase() {
+    const value = [...this.state.conversations];
+    this.localforage.setItem("conversations", value);
   }
   componentDidMount() {
+    this.initConversationsDatabase();
     this.socket = io("/", {
       query: { user: this.props.session.uuid },
     });
@@ -67,6 +82,7 @@ class Content extends React.Component {
         });
       } else alert("User Doesn't Exist!");
     }
+    this.updateDatabase();
   }
   handleIncomingMessage({ message, from, to, receiveTimeVal }) {
     const getIndexOfConversation = (uuid) => {
@@ -96,13 +112,14 @@ class Content extends React.Component {
       { from, message, receiveTimeVal },
     ];
     this.setState({ conversations: newConversations });
+    this.updateDatabase();
   }
   deleteConversation(uuid) {
-    console.log(uuid);
     const newConversations = [...this.state.conversations].filter((conv) => {
       return conv.uuid !== uuid;
     });
     this.setState({ conversations: newConversations, activeIndex: undefined });
+    this.updateDatabase();
   }
   render() {
     return (
@@ -131,5 +148,3 @@ class Content extends React.Component {
     );
   }
 }
-
-export default withCookie(Content);

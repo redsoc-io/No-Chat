@@ -1,4 +1,3 @@
-import { withCookie } from "next-cookie";
 import React from "react";
 import { FaPlus } from "react-icons/fa";
 import Dropzone from "react-dropzone";
