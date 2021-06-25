@@ -25,7 +25,7 @@ app.prepare().then(() => {
     var userUID = socket.handshake.query.user;
     socket.join(userUID);
     socket.on("send-message", ({ recipient, message }) => {
-      const currentDateValue = new Date().valueOf();
+      const currentDateValue = new Date().toUTCString();
       const messagetoSend = {
         message,
         from: userUID,

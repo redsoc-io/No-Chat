@@ -37,8 +37,8 @@ class NewConversation extends React.Component {
         <Dropzone
           onDrop={(acceptedFiles) => {
             var name = acceptedFiles[0].name;
-            const extension = name.substr(name.length - 3);
-            if (extension === "ncc") {
+            const extension = name.substr(name.length - 7);
+            if (extension === "ncc.txt") {
               this.handleFileChosen(acceptedFiles[0]);
             }
           }}
@@ -66,14 +66,14 @@ class NewConversation extends React.Component {
           )}
         </Dropzone>
         <div>
-          <p className="fs-2 py-3 m-0 text-center text-three fw-bold">Or</p>
+          <p className="fs-2 py-3 m-0 text-center text-one fw-bold">or</p>
         </div>
         <div className="bg-transparent border-2 p-3 text-center">
           <button
             className="btn btn-primary"
             onClick={() => {
               this.download(
-                `${this.props.session.user.name}-contact-card.ncc`,
+                `${this.props.session.user.name}-contact-card.ncc.txt`,
                 this.props.session.uuid
               );
             }}

@@ -1,4 +1,5 @@
 import React from "react";
+import Head from "next/head";
 
 export default class App_loading extends React.Component {
   render() {
@@ -13,6 +14,9 @@ export default class App_loading extends React.Component {
           flexDirection: "column",
         }}
       >
+        <Head>
+          <title>Loading</title>
+        </Head>
         <img src="/logo.png" height="200" width="200" />
         <div className="p-3">
           <div className="spinner-border p-3" role="status">

@@ -1,6 +1,7 @@
 import React from "react";
 import { MdMessage } from "react-icons/md";
-import { IoMdOptions } from "react-icons/io";
+import { IoMdOptions, IoMdPower } from "react-icons/io";
+import { signOut } from "next-auth/client";
 
 export default class Dashbar extends React.Component {
   componentDidMount() {
@@ -35,6 +36,12 @@ export default class Dashbar extends React.Component {
                 icon={IoMdOptions}
                 onClick={() => {
                   this.props.changeView(1);
+                }}
+              />
+              <ActionButton
+                icon={IoMdPower}
+                onClick={() => {
+                  signOut({ redirect: false });
                 }}
               />
             </div>

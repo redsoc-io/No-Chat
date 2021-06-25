@@ -13,12 +13,13 @@ export default class Messages extends React.Component {
               }
               return 1;
             })
-            .map(({ from, message }, i) => {
+            .map(({ from, message, receiveTimeVal }, i) => {
               return (
                 <Message
                   from={from}
                   message={message}
                   currentUserUid={this.props.currentUserUid}
+                  receiveTimeVal={receiveTimeVal}
                   key={this.props.currentUserUid + from + i}
                 />
               );

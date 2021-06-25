@@ -1,5 +1,4 @@
 import React from "react";
-import { FaTrash } from "react-icons/fa";
 
 export default class ChatHead extends React.Component {
   render() {
@@ -16,7 +15,7 @@ export default class ChatHead extends React.Component {
               width="42"
               className="rounded-circle"
             />
-            <span className="m-3 text-dark fw-light">
+            <span className="m-3 text-dark">
               {this.props.conversation.name || this.props.conversation.uuid}
             </span>
           </div>

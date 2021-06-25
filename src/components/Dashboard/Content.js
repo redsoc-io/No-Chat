@@ -8,7 +8,7 @@ export default class Content extends React.Component {
   constructor(props) {
     super(props);
     this.localforage = localforage;
-    this.currentIndex = localStorage.getItem("activeConversationIndex");
+    this.currentIndex = undefined;
     this.state = {
       activeIndex: this.currentIndex ? parseInt(this.currentIndex) : -1,
       mounted: false,
