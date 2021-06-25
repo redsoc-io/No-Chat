@@ -1,0 +1,23 @@
+.no-chat-settings {
+  .image-holder {
+    overflow: hidden;
+    height: 200px;
+    width: 200px;
+    position: relative;
+    .content {
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      position: absolute;
+      background: rgba(0, 0, 0, 0.2);
+      opacity: 0;
+    }
+    &:hover {
+      .content {
+        opacity: 1;
+        backdrop-filter: blur(1px);
+      }
+    }
+  }
+}

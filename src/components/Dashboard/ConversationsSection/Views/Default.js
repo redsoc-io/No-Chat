@@ -1,22 +1,18 @@
 import React from "react";
-import NewConversation from "./NewConversation";
-import Conversation from "./Conversation";
+import Conversation from "../Conversation";
+import Dashbar from "../Dashbar";
 
-class Conversatons extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { searchQuery: "" };
-  }
+export default class Defaut extends React.Component {
+  state = { searchQuery: "" };
   searchQueryChanged({ target }) {
     this.setState({ searchQuery: target.value });
   }
   render() {
     return (
-      <div className="col-lg-4 col-md-12 conversations-section border-end ">
-        <NewConversation
-          conversations={this.props.conversations}
-          addConversation={this.props.addConversation.bind(this)}
-          socket={this.props.socket}
+      <>
+        <Dashbar
+          session={this.props.session}
+          changeView={this.props.changeView}
         />
         {this.props.conversations.length === 0 && (
           <div className="text-center py-3">
@@ -54,9 +50,7 @@ class Conversatons extends React.Component {
               })}
           </>
         )}
-      </div>
+      </>
     );
   }
 }
-
-export default Conversatons;

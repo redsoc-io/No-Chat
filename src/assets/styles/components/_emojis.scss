@@ -1,0 +1,22 @@
+.emojis-holder {
+  bottom: 80px;
+  transition: all 0.3s ease-in-out;
+  &.show {
+    bottom: 90px;
+    opacity: 1;
+  }
+  &.hide {
+    animation: hide 0.3s linear;
+    @keyframes hide {
+      to {
+        bottom: 80px;
+        opacity: 0;
+      }
+    }
+    z-index: -3;
+    opacity: 0;
+  }
+  .emoji-mart-preview {
+    display: none;
+  }
+}

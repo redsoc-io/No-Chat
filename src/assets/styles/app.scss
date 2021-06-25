@@ -1,100 +1,48 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
-@import "components/conversations.scss";
-@import "components/conversation.scss";
+@import "components/scrollbar";
+@import "components/conversations";
+@import "components/conversation";
+@import "components/header";
+@import "components/shorthands";
+@import "components/emojis";
+@import "components/dimensions";
+@import "components/action_button";
+@import "components/no-chat-settings";
 
 * {
   font-family: "Roboto", sans-serif;
 }
 
-body {
-  header {
-    &.header-holder {
-      min-height: 100vh;
-      .container .col {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        form {
-          background: #fff;
-          padding: 2em;
-          border-radius: 6px;
-        }
-      }
-      .auth {
-        button {
-          border: none;
-          &:hover {
-            border: none;
-            z-index: 0;
-            opacity: 0.9;
-          }
-        }
-      }
-    }
-  }
-  .nav-prof-options {
-    width: 244px;
-    .prof-top {
-      padding: 0 16px;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      background: none;
-      border-radius: 0;
-      width: 100%;
-      div {
-        color: #000;
-        &.fw-bold {
-          width: 100%;
-          text-align: left;
-          overflow-x: hidden;
-        }
-      }
-      border: none;
-      outline: none;
-      &:after {
-        border-top: 0.3em solid #000;
-      }
-      &:focus,
-      &:hover {
-        background: #e3e3e3;
-        box-shadow: none;
-      }
-    }
-    .dropdown-menu {
-      margin: 0 !important;
-      width: 100%;
-      padding: 0;
-      li {
-        button,
-        a {
-          border-radius: 0;
-        }
-      }
-    }
-  }
-  .h-100vh {
-    height: 100vh;
-  }
-  .outline-none {
-    outline: none;
-  }
-  .cursor-pointer {
-    cursor: pointer;
-  }
+:root {
+  --one: #293b5f;
+  --two: #47597e;
+  --three: #dbe6fd;
+  --four: #b2ab8c;
 }
 
-::-webkit-scrollbar-track {
-  border-radius: 5px;
-  background-color: #f5f5f5;
+.bg-one {
+  background: var(--one);
+}
+.bg-two {
+  background: var(--two);
+}
+.bg-three {
+  background: var(--three);
+}
+.bg-four {
+  background: var(--four);
 }
 
-::-webkit-scrollbar {
-  width: 5px;
-  background-color: #f5f5f5;
+.text-one {
+  color: var(--one);
 }
-
-::-webkit-scrollbar-thumb {
-  background-color: #d62929;
+.text-two {
+  color: var(--two);
+}
+.text-three {
+  color: var(--three);
+}
+.text-four {
+  color: var(--four);
 }

@@ -3,7 +3,7 @@ import Header from "../components/Header";
 
 import { useSession } from "next-auth/client";
 import Dashboard from "../components/Dashboard/Dashboard";
-import App_loading from "../components/App_loading";
+import App_loading from "../components/misc/App_loading";
 
 export default function Home(props) {
   const [session, loading] = useSession();

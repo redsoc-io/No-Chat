@@ -1,0 +1,21 @@
+$messaging: 55px;
+$chathead: 60px;
+.messages-holder {
+  height: calc(100% - #{$messaging} - #{$chathead});
+  min-height: calc(100% - #{$messaging} - #{$chathead});
+  max-height: calc(100% - #{$messaging} - #{$chathead});
+}
+.chat-head,
+.goback-bar {
+  height: $chathead;
+  max-height: $chathead;
+  min-height: $chathead;
+}
+.messaging {
+  height: $messaging;
+  min-height: $messaging;
+  max-height: $messaging;
+}
+.conv-section-view .view-content {
+  height: calc(100% - #{$chathead});
+}

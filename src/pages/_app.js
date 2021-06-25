@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../assets/styles/app.scss";
 import Head from "next/head";
 import { Provider } from "next-auth/client";
-import Progress from "../components/Progress";
+import Progress from "../components/misc/Progress";
 
 function MyApp({ Component, pageProps }) {
   return (

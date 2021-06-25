@@ -1,6 +1,6 @@
 import React from "react";
-import Chatframe from "./Chatframe";
-import Conversatons from "./Conversations";
+import Chatframe from "./MessageSection/Chatframe";
+import Conversatons from "./ConversationsSection/Conversations";
 const io = require("socket.io-client");
 const localforage = require("localforage");
 
@@ -8,8 +8,9 @@ export default class Content extends React.Component {
   constructor(props) {
     super(props);
     this.localforage = localforage;
+    this.currentIndex = localStorage.getItem("activeConversationIndex");
     this.state = {
-      activeIndex: parseInt(localStorage.getItem("activeConversationIndex")),
+      activeIndex: this.currentIndex ? parseInt(this.currentIndex) : -1,
       mounted: false,
       conversations: [],
     };
@@ -25,7 +26,9 @@ export default class Content extends React.Component {
     });
     try {
       const value = await this.localforage.getItem("conversations");
-      this.setState({ conversations: typeof value === "object" ? value : [] });
+      if (value != null && value && typeof value === "object") {
+        this.setState({ conversations: value });
+      }
     } catch (err) {
       console.log(err); // It's fine :)
     }
@@ -127,13 +130,20 @@ export default class Content extends React.Component {
         {this.state.mounted && this.socket && (
           <div className="row g-0">
             <Conversatons
-              conversations={this.state.conversations}
+              conversations={
+                this.state.conversations ? this.state.conversations : []
+              }
               setActiveConversation={this.setActiveConversation.bind(this)}
               addConversation={this.addConversation.bind(this)}
               currentIndex={this.state.activeIndex}
+              session={this.props.session}
             />
             <Chatframe
-              conversation={this.state.conversations[this.state.activeIndex]}
+              conversation={
+                this.state.conversations
+                  ? this.state.conversations[this.state.activeIndex]
+                  : undefined
+              }
               currentUserUid={this.props.session.uuid}
               addMessageToConversation={this.addMessageToConversation.bind(
                 this

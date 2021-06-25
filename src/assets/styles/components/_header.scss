@@ -1,0 +1,25 @@
+header {
+  &.header-holder {
+    min-height: 100vh;
+    .container .col {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      form {
+        background: #fff;
+        padding: 2em;
+        border-radius: 6px;
+      }
+    }
+    .auth {
+      button {
+        border: none;
+        &:hover {
+          border: none;
+          z-index: 0;
+          opacity: 0.9;
+        }
+      }
+    }
+  }
+}
