@@ -30,10 +30,7 @@ export default class Defaut extends React.Component {
             </div>
             {this.props.conversations
               .filter((val) => {
-                return (
-                  val.uuid.includes(this.state.searchQuery) ||
-                  val.name.includes(this.state.searchQuery)
-                );
+                return val.name.includes(this.state.searchQuery);
               })
               .map((conv, i) => {
                 return (
@@ -45,6 +42,7 @@ export default class Defaut extends React.Component {
                     )}
                     currentIndex={this.props.currentIndex}
                     i={i}
+                    session={this.props.session}
                   />
                 );
               })}

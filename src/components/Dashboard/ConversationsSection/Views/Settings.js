@@ -25,9 +25,7 @@ export default function Settings(props) {
               </a>
             </div>
           </div>
-          <div className="fs-3 fw-light text-three">
-            {props.session.user.name}
-          </div>
+          <div className="fs-4 py-2 text-one">{props.session.user.name}</div>
         </div>
       </div>
     </div>

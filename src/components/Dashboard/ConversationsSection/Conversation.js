@@ -1,6 +1,5 @@
-import { FaTrash } from "react-icons/fa";
-
 export default function Conversation(props) {
+  const lastMessage = props.details.messages[props.details.messages.length - 1];
   return (
     <div
       className="text-start px-3 conversation-list-item"
@@ -23,8 +22,25 @@ export default function Conversation(props) {
             </div>
           </div>
           <div className="col-10">
-            <div className="container px-1 d-flex justify-content-start h-100 align-items-center">
-              <span className="fw-bold px-2">{props.details.name}</span>
+            <div className="container px-1 d-flex justify-content-center h-100 align-items-start w-100 flex-column">
+              <div className="px-2 w-100">
+                <div className="container p-0">
+                  <div className="row">
+                    <div className="col-9">
+                      <div className="fw-regular">{props.details.name}</div>
+                    </div>
+                    <div className="col-auto">
+                      {lastMessage.receiveTimeVal
+                        ? new Date(lastMessage.receiveTimeVal).toTimeString()
+                        : ""}
+                    </div>
+                  </div>
+                </div>
+                <div className="text-muted">
+                  {lastMessage.from === props.session.uuid ? <b>You: </b> : ""}
+                  {lastMessage.message}
+                </div>
+              </div>
             </div>
           </div>
         </div>
